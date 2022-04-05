@@ -39,4 +39,24 @@ async function getUser(username) {
   return response.data[0];
 }
 
-getUser(config.username).then(console.log);
+async function getTweets(username, total = 20) {
+  const user = await getUser(username);
+
+  const params = {
+    exclude: ['retweets', 'replies'],
+    max_results: total,
+  };
+  const url = `/2/users/${user.id}/tweets`;
+
+  return fetchFromTwitter(url, params);
+}
+
+(async () => {
+  const data = await getTweets(config.username);
+
+  fs.writeFile(
+    './tweets.json',
+    prettifyJSON(data),
+    'utf-8',
+  );
+})();
