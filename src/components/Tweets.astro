@@ -1,0 +1,45 @@
+---
+const bearerToken = import.meta.env.PUBLIC_TWITTER_BEARER_TOKEN;
+const username = import.meta.env.PUBLIC_TWITTER_USERNAME;
+function buildURL(baseURL, params = {}) {
+  const url = new URL(baseURL);
+  Object.entries(params).forEach(([key, value]) => {
+    url.searchParams.set(key, String(value));
+  });
+  return url;
+}
+async function fetchFromTwitter(endpoint, params = {}) {
+  const url = buildURL(`https://api.twitter.com${endpoint}`, params);
+  const headers = {
+    authorization: `Bearer ${bearerToken}`,
+  };
+  const response = await fetch(url.href, { headers });
+  return response.json();
+}
+async function getUser(username) {
+  const url = '/2/users/by';
+  const params = { usernames: username };
+  const response = await fetchFromTwitter(url, params);
+  return response.data[0];
+}
+async function getTweets(username, total = 20) {
+  const user = await getUser(username);
+  const params = {
+    exclude: ['retweets', 'replies'],
+    max_results: total,
+  };
+  const url = `/2/users/${user.id}/tweets`;
+  return fetchFromTwitter(url, params);
+}
+const tweets = await getTweets(username);
+---
+
+<section>
+  <ul>
+    {tweets.data.map(tweet => (
+      <li>
+        {tweet.text}
+      </li>
+    ))}
+  </ul>
+</section>

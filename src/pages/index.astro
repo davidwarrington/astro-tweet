@@ -4,6 +4,7 @@ import '../styles/global.css';
 import '../styles/home.css';
 // Component Imports
 import Tour from '../components/Tour.astro';
+import Tweets from '../components/Tweets.astro';
 // You can import components from any supported Framework here!
 
 
@@ -42,16 +43,18 @@ let title = 'My Astro Site';
 			</div>
 		</header>
 
+		<Tweets />
+
 		<Tour />
 
 		<!--
 
 		You can also use imported framework components directly in your markup!
-		
+
 		Note: by default, these components are NOT interactive on the client.
 		The `:visible` directive tells Astro to make it interactive.
-		
-		See https://docs.astro.build/core-concepts/component-hydration/ 
+
+		See https://docs.astro.build/core-concepts/component-hydration/
 
 		-->
 
